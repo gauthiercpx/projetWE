@@ -139,7 +139,7 @@ projetWE/
 ## Auteur
 
 Gauthier COPPEAUX  
-M1 2025-26 - Web Engineering
+M1 IL CLA1 - Web Engineering 2025-26
 
 ## Ressources
 
