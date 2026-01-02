@@ -9,6 +9,7 @@ import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import { WeatherService, WeatherForDate } from '../services/weather.service';
 
 /*FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -79,7 +80,8 @@ export class CreatePollComponentComponent implements OnInit {
   submitted = false;
 
 
-  constructor(public messageService: MessageService, public pollService: PollService, private actRoute: ActivatedRoute) { }
+  constructor(public messageService: MessageService, public pollService: PollService, 
+              private actRoute: ActivatedRoute, private weatherService: WeatherService) { }
 
   ngOnInit(): void {
     this.poll.pollChoices = [];
@@ -108,6 +110,17 @@ export class CreatePollComponentComponent implements OnInit {
     this.options = {
       initialView: 'timeGridWeek',
       plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
+
+      // Ajouter la météo après le rendu de l'en-tête
+      dayHeaderDidMount: (arg) => {
+        const weather = this.getWeatherForDate(arg.date);
+        if (weather) {
+          const weatherSpan = document.createElement('div');
+          weatherSpan.style.fontSize = '0.85em';
+          weatherSpan.innerHTML = `${weather.emoji} ${weather.temperature}°C`;
+          arg.el.appendChild(weatherSpan);
+        }
+      },
 
       // dateClick: this.handleDateClick.bind(this), // bind is important!
       select: (selectionInfo) => {
@@ -207,7 +220,19 @@ export class CreatePollComponentComponent implements OnInit {
 
     if (this.poll.title && this.poll.location && this.poll.description) {
       this.step = 1;
-
+      
+      // Charger la météo pour le lieu du sondage
+      this.weatherService.fetchWeather(this.poll.location).then(() => {
+        // Forcer le rendu du calendrier pour afficher la météo
+        setTimeout(() => {
+          if (this.calendarComponent) {
+            const calendarApi = this.calendarComponent.getApi();
+            const currentView = calendarApi.view.type;
+            calendarApi.changeView('dayGridMonth');
+            calendarApi.changeView(currentView);
+          }
+        }, 100);
+      });
 
       return;
     }
@@ -383,5 +408,22 @@ export class CreatePollComponentComponent implements OnInit {
     }
     );
 
+  }
+
+  getWeatherForDate(date: Date | string): WeatherForDate | null {
+    let dateObj: Date;
+    if (typeof date === 'string') {
+      dateObj = new Date(date);
+    } else if (date instanceof Date) {
+      dateObj = date;
+    } else {
+      return null;
+    }
+    
+    return this.weatherService.getWeatherForDate(dateObj);
+  }
+
+  getWeatherLocation(): string {
+    return this.weatherService.getCurrentLocation();
   }
 }

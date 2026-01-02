@@ -75,28 +75,35 @@
         </div>
 
         <div>
-          <p-selectButton  [options]="calendarortableoption" [(ngModel)]="calendarortable">
-            <ng-template let-item>
-              <i [class]="item.icon">Vue {{item.text}}</i>
-            </ng-template>
-          </p-selectButton>
+          <p-selectButton [options]="calendarortableoption" [(ngModel)]="calendarortable" optionLabel="text" optionValue="value"></p-selectButton>
         </div>
 
         <div *ngIf="calendarortable ==='calendar'">
+          <p style="text-align: center; color: #666; font-size: 0.9em; margin: 10px 0;">
+            📍 Météo : {{getWeatherLocation()}}
+          </p>
           <full-calendar #calendar [options]="options"></full-calendar>
         </div>
 
         <div *ngIf="calendarortable !='calendar'">
                 <div class="container-fluid">
-            <div class="table-responsive-sm card">
-            <table class="table">
+            <div class="table-responsive-sm card">            <p style="text-align: center; color: #666; font-size: 0.9em; margin: 10px 0;">
+              📍 Météo : {{getWeatherLocation()}}
+            </p>            <table class="table">
             <thead>
               <tr>
                 <th rowspan="2"></th>
-                <th *ngFor="let ev of events" class="text-light" style="text-align: center;background-color: #545B62">{{ev.start | date:'EEEE d LLLL': 'CEST':'fr'}}</th>
+                <th *ngFor="let pc of poll?.pollChoices" class="text-light" style="text-align: center;background-color: #545B62">
+                  {{pc.startDate | date:'EEEE d LLLL': 'CEST':'fr'}}
+                  <div style="font-size: 0.9em; margin-top: 5px; min-height: 1.2em;">
+                    <span *ngIf="getWeatherForDate(pc.startDate) as weather">
+                      {{weather.emoji}} {{weather.temperature}}°C
+                    </span>
+                  </div>
+                </th>
               </tr>
               <tr>
-                <th *ngFor="let ev of events" style="text-align: center">{{ev.start | date:'H:mm'}} <BR>-<BR> {{ev.end | date:'H:mm'}}</th>
+                <th *ngFor="let pc of poll?.pollChoices" style="text-align: center">{{pc.startDate | date:'H:mm'}} <BR>-<BR> {{pc.endDate | date:'H:mm'}}</th>
               </tr>
               <tr>
                 <th><span>{{uniqueUsers.length + 1}} participant</span><span *ngIf="uniqueUsers.length > 0">s</span></th>
