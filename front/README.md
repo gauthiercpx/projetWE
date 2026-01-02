@@ -20,6 +20,17 @@ La météo s'affiche dans les écrans suivants :
 
 Exemple d'affichage : libellé météo + température (ex : "Ciel dégagé 14°C").
 
+## Captures d'écran
+
+Vue réponse (tableau) : météo affichée sur chaque colonne de date.
+![Vue tableau](./docs/doodle_tab.png)
+
+Vue réponse (calendrier) : météo visible dans les en-têtes des jours de la semaine.
+![Vue calendrier](./docs/doodle_calendar.png)
+
+Création de sondage : météo affichée pendant la sélection des dates une fois le lieu validé.
+![Création de sondage](./docs/doodle_create.png)
+
 ## Fonctionnalités principales
 
 ### 1. Service météo
