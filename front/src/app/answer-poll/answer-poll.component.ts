@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { PollService } from '../poll-service.service';
 import {
@@ -26,8 +24,6 @@ import { WeatherService, WeatherForDate } from '../services/weather.service';
   templateUrl: './answer-poll.component.html',
   styleUrls: ['./answer-poll.component.css'],
   providers: [MessageService, PollService, NgbModal],
-  standalone: true,
-  imports: [CommonModule, FormsModule],
 })
 export class AnswerPollComponent implements OnInit {
   constructor(
